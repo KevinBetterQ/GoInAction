@@ -2,26 +2,29 @@ package search
 
 import "log"
 
-// Result 描述搜索的结果
+// Result contains the result of a search
 type Result struct {
 	Field   string
 	Content string
 }
 
-// Matcher 定义了要实现的新搜索类型的行为
+// Matcher defined the behavior required by types that want
+// to implement a new search type
 type Matcher interface {
 	Search(feed *Feed, searchTerm string) ([]*Result, error)
 }
 
-// Match 搜索数据源的数据，并将匹配结果输出到 results 通道
+// Match is launched as a goroutine for each individual feed
+// to run searches concurrently.
 func Match(matcher Matcher, feed *Feed, term string, results chan *Result) {
-	// 对特定的搜索器执行搜索
+	// Perform the search against the specified matcher.
 	searchResults, err := matcher.Search(feed, term)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
+	// Write the results to the channel.
 	for _, result := range searchResults {
 		results <- result
 	}

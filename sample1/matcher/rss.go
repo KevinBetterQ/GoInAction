@@ -56,29 +56,32 @@ type (
 	}
 )
 
+// rssMatcher implements the Matcher interface.
 type rssMatcher struct{}
 
+// init register the matcher with the program.
 func init() {
 	var matcher rssMatcher
 	search.Register("rss", matcher)
 }
 
+// Search look at the document for the specified search term.
 func (m rssMatcher) Search(feed *search.Feed, searchTerm string) ([]*search.Result, error) {
 	var results []*search.Result
 	log.Printf("Search Feed Type[%s] Site[%s] for URL[%s]\n", feed.Type, feed.Name, feed.URL)
-	// 获取要搜索的数据源
+	// Retrieve the data to search.
 	document, err := m.retrieve(feed)
 	if err != nil {
 		return nil, err
 	}
-	// 遍历搜索
+	// Traversal search.
 	for _, channelItem := range document.Channel.Item {
-		// 检查标题部分是否包含搜索项
+		// Check the title for the search term.
 		matched, err := regexp.MatchString(searchTerm, channelItem.Title)
 		if err != nil {
 			return nil, err
 		}
-		// 如果找到匹配项，将其作为结果保存
+		// If we found a match, save the result
 		if matched {
 			results = append(results, &search.Result{
 				Field:   "Title",
@@ -86,12 +89,12 @@ func (m rssMatcher) Search(feed *search.Feed, searchTerm string) ([]*search.Resu
 			})
 		}
 
-		// 检查描述部分是否包含搜索项
+		// Check the description for the search term.
 		matched, err = regexp.MatchString(searchTerm, channelItem.Description)
 		if err != nil {
 			return nil, err
 		}
-		// 如果找到匹配项，将其作为结果保存
+		// If we found a match, save the result
 		if matched {
 			results = append(results, &search.Result{
 				Field:   "Description",
@@ -102,7 +105,7 @@ func (m rssMatcher) Search(feed *search.Feed, searchTerm string) ([]*search.Resu
 	return results, nil
 }
 
-// retrieve 发送 HTTP Get 请求获取 rss 数据源并解码
+// retrieve performs a HTTP Get request for the rss feed and decodes the results.
 func (m rssMatcher) retrieve(feed *search.Feed) (*rssDocument, error) {
 	if feed.URL == "" {
 		return nil, errors.New("no rss feed URL provided")
