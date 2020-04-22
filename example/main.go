@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
-	_ "GoInAction/sample1/matcher"
-	"GoInAction/sample1/search"
+	_ "GoInAction/example/matcher"
+	"GoInAction/example/search"
 )
 
 // init is called prior to main.

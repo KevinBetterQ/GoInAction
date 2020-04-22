@@ -1,7 +1,7 @@
 package matcher
 
 import (
-	"GoInAction/sample1/search"
+	"GoInAction/example/search"
 	"encoding/xml"
 	"errors"
 	"fmt"

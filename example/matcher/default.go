@@ -1,6 +1,6 @@
 package matcher
 
-import "GoInAction/sample1/search"
+import "GoInAction/example/search"
 
 type defaultMatcher struct{}
 
