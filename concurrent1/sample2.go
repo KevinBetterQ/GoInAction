@@ -19,7 +19,7 @@ func RunSample2() {
 	go incCounter(2)
 
 	wg2.Wait()
-	fmt.Printf("Final Counter: %d\\n", counter)
+	fmt.Printf("Final Counter: %d\n", counter)
 }
 
 func incCounter(id int) {
